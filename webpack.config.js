@@ -2,110 +2,126 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader')
-const {
-    CleanWebpackPlugin
-} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     devtool: 'source-map',
-    entry: './src/scripts/main.js',
+    entry: {
+      main: './src/scripts/main.js',
+    },
     output: {
-        path: path.resolve(__dirname, './dist'),
-        filename: './scripts/main.js',
+      path: path.resolve(__dirname, './dist'),
+      filename: 'scripts/main.js',
     },
     module: {
-        rules: [
+      rules: [
+        {
+          test: /\.(ts|tsx)$/,
+          exclude: /node_modules/,
+          use: [
             {
-                test: /\.vue/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'vue-loader',
-                    },
-                ],
+              loader: 'ts-loader',
             },
-            {
-                test: /\.js|jsx/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            ['@babel/preset-env',{'targets':'> 0.25%, not dead'}],
-                            '@babel/preset-react',
-                        ],
-                    },
-                }, 
-            ],
+          ],
         },
+        {
+          test: /\.vue/,
+          exclude: /node_modules/,
+          use: [
             {
-                test: /\.(css|sass|scss)/,
-                use: [{
-                        loader: MiniCssExtractPlugin.loader,
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            sourceMap: true,
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                    }
-                ]
+              loader: 'vue-loader',
+            }
+          ],
+        },
+        {
+          test: /\.(js|jsx)/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  ['@babel/preset-env', { "targets": "> 0.25%, not dead" }],
+                  '@babel/preset-react',
+                ],
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(css|scss|sass)$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
             },
             {
-                test: /\.(png|jpg|jpeg)/,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'images/[name][ext]'
+              loader: 'css-loader',
+              options: { sourceMap: true },
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        },
+        {
+          test: /\.png|\.jpg/,
+          type: 'asset/resource',
+          generator: {
+            filename: 'images/[name][ext]',
+          },
+          use: [
+            // {
+            //   loader: 'file-loader',
+            //   options: {
+            //     esModule: false,
+            //     name: 'images/[name].[ext]',
+            //   },
+            // },
+            {
+              loader: 'image-webpack-loader',
+              options: {
+                mozjpeg: {
+                  progressive: true,
+                  quality: 65,
                 },
-                use: [
-                    {
-                        loader: 'image-webpack-loader',
-                        options: {
-                            mozjpeg:{
-                                progressive: true,
-                                quality: 65,
-                            },
-                        },
-                    },
-                ],
+              },
+            },
+          ],
+        },
+        {
+          test: /\.pug/,
+          use: [
+            {
+              loader: 'html-loader',
             },
             {
-                test: /\.pug/,
-                use: [{
-                        loader: 'html-loader',
-                    },
-                    {
-                        loader: 'pug-html-loader',
-                        options: {
-                            pretty: true,
-                        },
-                    },
-                ],
+              loader: 'pug-html-loader',
+              options: {
+                pretty: true,
+              },
             },
-        ],
+          ],
+        },
+      ],
     },
     plugins: [
-        new VueLoaderPlugin(),
-        new MiniCssExtractPlugin({
-            filename: './stylesheets/main.css',
-        }),
-        new HtmlWebpackPlugin({
-            template: './src/templates/index.pug',
-            filename: 'index.html',
-        }),
-        new HtmlWebpackPlugin({
-            template: './src/templates/access.pug',
-            filename: 'access.html',
-        }),
-        new HtmlWebpackPlugin({
-            template: './src/templates/members/taro.pug',
-            filename: 'members/taro.html',
-        }),
-        new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: './stylesheets/main.css',
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/templates/index.pug',
+        filename: 'index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/templates/access.pug',
+        filename: 'access.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/templates/members/taro.pug',
+        filename: 'members/taro.html',
+      }),
+      new CleanWebpackPlugin(),
+      new VueLoaderPlugin(),
     ],
-}
+  };

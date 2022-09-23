@@ -1,1 +1,0 @@
-{"version":3,"file":"./stylesheets/main.css","mappings":"AAAA,KACI,c;ACAA,mBACI,Y","sources":["webpack://webpack/./src/stylesheets/main.scss","webpack://webpack/./src/scripts/VueApp.vue"],"sourcesContent":["body{\n    color:lightblue;\n}","\n    p {\n        color:green;\n    }\n   "],"names":[],"sourceRoot":""}
