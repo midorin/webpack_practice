@@ -16,7 +16,7 @@ module.exports = {
     },
     output: {
       path: path.resolve(__dirname, './dist'),
-      filename: 'scripts/main.js',
+      filename: 'scripts/[name]-[contenthash].js',
     },
     module: {
       rules: [
@@ -63,7 +63,7 @@ module.exports = {
           test: /\.png|\.jpg/,
           type: 'asset/resource',
           generator: {
-            filename: 'images/[name][ext]',
+            filename: 'images/[name]-[contenthash][ext]',
           },
           use: [
             // {
@@ -102,7 +102,7 @@ module.exports = {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: './stylesheets/main.css',
+        filename: './stylesheets/[name]-[contenthash].css',
       }),
       new HtmlWebpackPlugin({
         template: './src/templates/index.pug',
